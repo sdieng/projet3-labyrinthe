@@ -16,7 +16,7 @@ class Player:
 		self.coord = coord
 
 class Coordinates:
-	
+
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
@@ -24,24 +24,24 @@ class Coordinates:
 ##Classe qui définit les cases de l'aire de jeu.
 
 class Square:
-	
+
 	def __init__(self, coord, isWall): ##, hasItem, item
 		self.isWall = isWall
 		self.coord = coord
 		self.hasItem = False
 		self.item = Item('test')
-	
+
 	##Getsetters
-	
+
 	def getIsWall(self):
 		return self.isWall
-	
+
 	def setIsWall(state):
 		self.isWall = state
-	
+
 	def getHasItem(self):
 		return self.hasItem
-	
+
 	def setHasItem(state):
 		self.hasItem = state
 
@@ -53,7 +53,7 @@ class Square:
 	def setCoord(self, x, y):
 		self.coord.x = x
 		self.coord.y = y
-	
+
 	def setItem(self, item):
 		self.item = item
 	##Créer méthode pour savoir si la case contient un objet en parcourant une liste d'objets et en comparant l'attribut coord
@@ -66,12 +66,12 @@ class Item:
 	def __init__(self, name):
 		self.name = name
 		self.gotItem = False
-	
+
 	#Getsetters
 
 	def getGotItem(self):
 		return self.gotItem
-	
+
 	def setGotItem(state):
 		self.gotItem = state
 
@@ -81,8 +81,8 @@ def main():
 	macgyver = Player(Coordinates(8, 1))
 	grid = generateGrid()
 	## Zone de tests
-	##print(grid[0].isWall)
-	##print(grid[7].isWall)
+	print(grid[0].isWall)
+	print(grid[7].isWall)
 	##case = Square(generateRandomCoordinates(), False)
 	##print(case.coord.x)
 	##print(case.coord.y)
