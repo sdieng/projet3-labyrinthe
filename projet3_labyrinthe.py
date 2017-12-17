@@ -104,7 +104,7 @@ def generateRandomCoordinates():
 	coord = Coordinates(random.randint(0, 14), random.randint(0, 14))
 	return coord
 
-#Mé
+#Méthode de génération de la grille
 
 def generateGrid():
 	with open('grid.txt') as txtgrid:
