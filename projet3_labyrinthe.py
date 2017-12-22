@@ -70,12 +70,11 @@ class Square:
 	def checkMove(grid, player, coord):
 		for square in grid:
 			if square.coord == coord:
-				if square.getIsWall() == True:
+				if square.getIsWall() == False:
 					player.setCoord(coord)
 					if square.getHasItem() == True:
 						square.item.setGotItem(True)
-			elif:
-				pass
+
 
 ##Classe définissant les objets du jeu par leur nom, leur emplacement, et un booléen qui indique si l'objet est en notre possession.
 
