@@ -15,6 +15,15 @@ class Player:
 	def __init__(self, coord):
 		self.coord = coord
 
+	def getCoord(self):
+		x = self.coord.x
+		y = self.coord.y
+		return Coordinates(x, y)
+
+	def setCoord(self, x, y):
+		self.coord.x = x
+		self.coord.y = y
+
 class Coordinates:
 
 	def __init__(self, x, y):
@@ -58,7 +67,15 @@ class Square:
 		self.item = item
 	##Créer méthode pour savoir si la case contient un objet en parcourant une liste d'objets et en comparant l'attribut coord
 	##des deux. If square.coord == item.coord, then item.gotItem = True. A lancer après mouvement
-
+	def checkMove(grid, player, coord):
+		for square in grid:
+			if square.coord == coord:
+				if square.getIsWall() == True:
+					player.setCoord(coord)
+					if square.getHasItem() == True:
+						square.item.setGotItem(True)
+			elif:
+				pass
 
 ##Classe définissant les objets du jeu par leur nom, leur emplacement, et un booléen qui indique si l'objet est en notre possession.
 
