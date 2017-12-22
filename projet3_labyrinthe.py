@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##################################################################################
 ## A faire : contrôle des données,  navigation dans la grille (liste de Square) ##
 ##           interface graphique, capture d'événements (déplacement et fin)     ##
@@ -32,6 +33,7 @@ class Coordinates:
 
 ##Classe qui définit les cases de l'aire de jeu.
 
+
 class Square:
 
 	def __init__(self, coord, isWall): ##, hasItem, item
@@ -65,8 +67,7 @@ class Square:
 
 	def setItem(self, item):
 		self.item = item
-	##Créer méthode pour savoir si la case contient un objet en parcourant une liste d'objets et en comparant l'attribut coord
-	##des deux. If square.coord == item.coord, then item.gotItem = True. A lancer après mouvement
+
 	def checkMove(grid, player, coord):
 		for square in grid:
 			if square.coord == coord:
@@ -74,7 +75,6 @@ class Square:
 					player.setCoord(coord)
 					if square.getHasItem() == True:
 						square.item.setGotItem(True)
-
 
 ##Classe définissant les objets du jeu par leur nom, leur emplacement, et un booléen qui indique si l'objet est en notre possession.
 
