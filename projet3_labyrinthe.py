@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##################################################################################
-## A faire : contrôle des données,  navigation dans la grille (liste de Square) ##
+## A faire : contrôle des données,                                              ##
 ##           interface graphique, capture d'événements (déplacement et fin)     ##
 ##################################################################################
 
