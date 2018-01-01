@@ -5,7 +5,8 @@
 ##################################################################################
 
 ##Zone des modules importés
-
+import pygame
+from pygame.locals import *
 import random
 
 ##Zone des classes crées
