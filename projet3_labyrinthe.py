@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 ##################################################################################
-## A faire : contrôle des données,                                              ##
-##           interface graphique, capture d'événements (déplacement et fin)     ##
+## A faire : contrôle des données, capture d'événements (déplacement et fin)    ##
 ##################################################################################
 
-##Zone des modules importés
+##Import zone
 import pygame
 from pygame.locals import *
 import random
 
-##Zone des classes crées
+##Custom classes
 
-##Classe Coordinates qui est définie par deux entiers : x et y.
-##Elle permet de stocker les coordonnées d'une case ou d'un objet
+#A class to define the attributes of the player
 class Player:
 	def __init__(self, coord):
 		self.coord = coord
@@ -26,24 +24,21 @@ class Player:
 		self.coord.x = x
 		self.coord.y = y
 
+#A class to stock the coordinates of a square, player or item
 class Coordinates:
-
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
 
-##Classe qui définit les cases de l'aire de jeu.
-
-
+#A class that will define the squares of the maze
 class Square:
-
 	def __init__(self, coord, isWall): ##, hasItem, item
 		self.isWall = isWall
 		self.coord = coord
 		self.hasItem = False
 		self.item = Item('test')
 
-	##Getsetters
+	#Getsetters
 
 	def getIsWall(self):
 		return self.isWall
@@ -69,6 +64,8 @@ class Square:
 	def setItem(self, item):
 		self.item = item
 
+    #Method to check if the movement input is valid (not a wall) and to get
+	#the item on the square if there is one
 	def checkMove(grid, player, coord):
 		for square in grid:
 			if square.coord == coord:
@@ -77,8 +74,8 @@ class Square:
 					if square.getHasItem() == True:
 						square.item.setGotItem(True)
 
-##Classe définissant les objets du jeu par leur nom, leur emplacement, et un booléen qui indique si l'objet est en notre possession.
-
+#A class to define the items by a name and a boolean to know if the player
+#got the item
 class Item:
 	def __init__(self, name):
 		self.name = name
@@ -92,7 +89,7 @@ class Item:
 	def setGotItem(state):
 		self.gotItem = state
 
-##Bloc main
+##Main method
 
 def main():
 	#Initialization of pygame
@@ -124,6 +121,7 @@ def main():
 					count = 0
 					pos_x = 0
 					pos_y += 30
+
 			else:
 				pos_x += 30
 				count += 1
@@ -134,18 +132,16 @@ def main():
 
 		pygame.display.flip()
 
-
-
-	#Event capture
+	##Event capture zone
 	running = 1
 	while running:
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				running = 0
 
-	## Zone de tests
-	print(grid[0].isWall)
-	print(grid[7].isWall)
+	##Test zone
+	##print(grid[0].isWall)
+	##print(grid[7].isWall)
 	##case = Square(generateRandomCoordinates(), False)
 	##print(case.coord.x)
 	##print(case.coord.y)
@@ -160,15 +156,12 @@ def main():
 	##print(case.item.coord.x)
 	##print(case.item.coord.y)
 
-##Méthode générale pour générer des coordonnées aléatoires.
-##Renvoie un objet de type Coordinates
-
+#Method to get random coordinates. Returns a Coordinates type object
 def generateRandomCoordinates():
 	coord = Coordinates(random.randint(0, 14), random.randint(0, 14))
 	return coord
 
-#Méthode de génération de la grille
-
+#Method to generate the grid
 def generateGrid():
 	with open('grid.txt') as txtgrid:
 	    strgrid = ''.join(line.strip() for line in txtgrid)
@@ -176,20 +169,24 @@ def generateGrid():
 	    grid = []
 	    x = 0
 	    y = 0
-	    ##Lire la chaîne par caractères, créer un Square par caractère (for) en définissant isWall selon le caractère lu
+
 	    for entry in chrlistGrid:
 		    coord = Coordinates(x, y)
+
 		    if entry == 'W':
 			    grid.append(Square(coord, True))
 			    if x < 14:
 				    x = x + 1
+
 			    elif x == 14:
 				    x = 0
 				    y = y + 1
+
 		    elif entry == 'X':
 			    grid.append(Square(coord, False))
 			    if x < 14:
 				    x = x + 1
+
 			    elif x == 14:
 				    x = 0
 				    y = y + 1
