@@ -199,6 +199,5 @@ def generateGrid():
 	##needle = Item('aiguille')
 	return grid
 
-#def displayGrid(grid, window):
 
 main()
