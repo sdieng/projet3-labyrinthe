@@ -128,8 +128,9 @@ def main():
 			if event.type == KEYDOWN:
 				if event.key == K_DOWN:
 					for square in grid:
-						if square.coord.x == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
+						if square.coord.y == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
+							print(str(square.coord.x) + ";" + str(square.coord.y))
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(0, 30)
@@ -137,10 +138,13 @@ def main():
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
+							break
 
 				if event.key == K_UP:
 					for square in grid:
-						if square.coord.x == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
+						if square.coord.y == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
+							print("OK MOVE")
+							print(str(square.coord.x) + ";" + str(square.coord.y))
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(0, -30)
@@ -148,6 +152,7 @@ def main():
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
+							break
 
 				if event.key == K_LEFT:
 					for square in grid:
