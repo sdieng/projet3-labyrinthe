@@ -161,6 +161,7 @@ def main():
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
+							break
 
 				if event.key == K_RIGHT:
 					for square in grid:
@@ -174,6 +175,7 @@ def main():
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
+							break
 
 	##Test zone
 
