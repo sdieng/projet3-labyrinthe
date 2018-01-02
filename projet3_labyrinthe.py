@@ -14,6 +14,9 @@ import random
 class Player:
 	def __init__(self, coord):
 		self.coord = coord
+		self.image = pygame.transform.scale(pygame.image.load("player.png").convert_alpha(), (30, 30))
+		self.position = self.image.get_rect()
+
 
 	def getCoord(self):
 		x = self.coord.x
@@ -36,7 +39,7 @@ class Square:
 		self.isWall = isWall
 		self.coord = coord
 		self.hasItem = False
-		self.item = Item('test')
+		#self.item = Item('test')
 
 	#Getsetters
 
@@ -103,58 +106,76 @@ def main():
 
 	#Initialization of the player and the grid
 	player = Player(Coordinates(8, 1))
+	tp = pygame.image.load("player.png").convert_alpha()
+
 	grid = generateGrid()
 
 	#Display of the maze
-	count = 0
-	pos_x = 0
-	pos_y = 0
-
-	for square in grid:
-		if count < 15:
-			if square.isWall == True:
-				print("(" + str(pos_x) + " ; " + str(pos_y) + ")")
-				window.blit(wall, (pos_x, pos_y))
-				pos_x += 30
-				count += 1
-				if count == 15:
-					count = 0
-					pos_x = 0
-					pos_y += 30
-
-			else:
-				pos_x += 30
-				count += 1
-				if count == 15:
-					count = 0
-					pos_x = 0
-					pos_y += 30
-
-		pygame.display.flip()
+	displayGrid(grid, window, wall, background)
+	window.blit(tp, (210, 430))
+	tppos = tp.get_rect()
+	pygame.display.flip()
 
 	##Event capture zone
 	running = 1
+	itemCount = 0
 	while running:
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				running = 0
 
+			#Movement
+			if event.type == KEYDOWN:
+				if event.key == K_DOWN:
+					for square in grid:
+						if square.coord.x == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
+							print("OK MOVE")
+							displayGrid(grid, window, wall, background)
+							player.setCoord(square.coord.x, square.coord.y)
+							tppos.move(0, 30)
+							window.blit(tp, tppos)
+							if square.hasItem == True:
+								itemCount += 1
+							pygame.display.flip()
+
+				if event.key == K_UP:
+					for square in grid:
+						if square.coord.x == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
+							displayGrid(grid, window, wall, background)
+							player.setCoord(square.coord.x, square.coord.y)
+							tppos.move(0, -30)
+							window.blit(tp, tppos)
+							if square.hasItem == True:
+								itemCount += 1
+							pygame.display.flip()
+
+				if event.key == K_LEFT:
+					for square in grid:
+						if square.coord.x == (player.coord.x - 1) and square.coord.y == player.coord.y and square.isWall == False:
+							print("OK MOVE")
+							print(str(square.coord.x) + ";" + str(square.coord.y))
+							displayGrid(grid, window, wall, background)
+							player.setCoord(square.coord.x, square.coord.y)
+							tppos.move(-30, 0)
+							window.blit(tp, (tppos[0], tppos[1]))
+							if square.hasItem == True:
+								itemCount += 1
+							pygame.display.flip()
+
+				if event.key == K_RIGHT:
+					for square in grid:
+						if square.coord.x == (player.coord.x + 1) and square.coord.y == player.coord.y and square.isWall == False:
+							print("OK MOVE")
+							print(str(square.coord.x) + ";" + str(square.coord.y))
+							displayGrid(grid, window, wall, background)
+							player.setCoord(square.coord.x, square.coord.y)
+							tppos.move(30, 0)
+							window.blit(tp, (tppos[0], tppos[1]))
+							if square.hasItem == True:
+								itemCount += 1
+							pygame.display.flip()
+
 	##Test zone
-	##print(grid[0].isWall)
-	##print(grid[7].isWall)
-	##case = Square(generateRandomCoordinates(), False)
-	##print(case.coord.x)
-	##print(case.coord.y)
-	##print(case)
-	##print(case.item.name)
-	##print(case.item.coord.x)
-	##print(case.item.coord.y)
-	##case.setCoord(1, 1)
-	##case.item.setCoord(2, 2)
-	##print(case.coord.x)
-	##print(case.coord.y)
-	##print(case.item.coord.x)
-	##print(case.item.coord.y)
 
 #Method to get random coordinates. Returns a Coordinates type object
 def generateRandomCoordinates():
@@ -172,7 +193,6 @@ def generateGrid():
 
 	    for entry in chrlistGrid:
 		    coord = Coordinates(x, y)
-
 		    if entry == 'W':
 			    grid.append(Square(coord, True))
 			    if x < 14:
@@ -191,10 +211,35 @@ def generateGrid():
 				    x = 0
 				    y = y + 1
 
-	##syringe = Item('seringue')
+	##syringe = Item('ether')
 	##tube = Item('tube')
 	##needle = Item('aiguille')
 	return grid
 
+#Method to display the grid
+def displayGrid(grid, window, wall, background):
+		count = 0
+		pos_x = 0
+		pos_y = 0
+		window.blit(background, (0, 0))
+
+		for square in grid:
+			if count < 15:
+				if square.isWall == True:
+					window.blit(wall, (pos_x, pos_y))
+					pos_x += 30
+					count += 1
+					if count == 15:
+						count = 0
+						pos_x = 0
+						pos_y += 30
+
+				else:
+					pos_x += 30
+					count += 1
+					if count == 15:
+						count = 0
+						pos_x = 0
+						pos_y += 30
 
 main()
