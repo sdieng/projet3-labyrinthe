@@ -95,8 +95,41 @@ class Item:
 ##Bloc main
 
 def main():
-	macgyver = Player(Coordinates(8, 1))
+
+	#Event capture
+	running = 1
+	while running:
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				running = 0
+				
+	#Initialization of pygame, window and graphic library
+	pygame.init()
+	window = pygame.display.set_mode((450, 450))
+	background = pygame.image.load("background.jpg").convert()
+	wall = pygame.image.load("wall.png").convert()
+	window.blit(background,(0, 0))
+
+	#Initialization of the player and the grid
+	player = Player(Coordinates(8, 1))
 	grid = generateGrid()
+
+	#Display of the maze
+	count = 0
+	pos_x = 0
+	pos_y = 0
+
+	for square in grid:
+		if count < 15:
+			if square = 'W':
+				window.blit(wall, (pos_x, pos_y))
+				pos_x += 15
+				count += 1
+				if count = 15:
+					count = 0
+					pos_x = 0
+					pos_y += 15
+
 	## Zone de tests
 	print(grid[0].isWall)
 	print(grid[7].isWall)
