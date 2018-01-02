@@ -95,16 +95,10 @@ class Item:
 ##Bloc main
 
 def main():
-
-	#Event capture
-	running = 1
-	while running:
-		for event in pygame.event.get():
-			if event.type == QUIT:
-				running = 0
-				
-	#Initialization of pygame, window and graphic library
+	#Initialization of pygame
 	pygame.init()
+
+	#Initialization window and graphic library
 	window = pygame.display.set_mode((450, 450))
 	background = pygame.image.load("background.jpg").convert()
 	wall = pygame.image.load("wall.png").convert()
@@ -121,14 +115,33 @@ def main():
 
 	for square in grid:
 		if count < 15:
-			if square = 'W':
+			if square.isWall == True:
+				print("(" + str(pos_x) + " ; " + str(pos_y) + ")")
 				window.blit(wall, (pos_x, pos_y))
-				pos_x += 15
+				pos_x += 30
 				count += 1
-				if count = 15:
+				if count == 15:
 					count = 0
 					pos_x = 0
-					pos_y += 15
+					pos_y += 30
+			else:
+				pos_x += 30
+				count += 1
+				if count == 15:
+					count = 0
+					pos_x = 0
+					pos_y += 30
+
+		pygame.display.flip()
+
+
+
+	#Event capture
+	running = 1
+	while running:
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				running = 0
 
 	## Zone de tests
 	print(grid[0].isWall)
@@ -185,5 +198,7 @@ def generateGrid():
 	##tube = Item('tube')
 	##needle = Item('aiguille')
 	return grid
+
+#def displayGrid(grid, window):
 
 main()
