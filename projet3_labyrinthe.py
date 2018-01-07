@@ -47,7 +47,7 @@ class Square:
 		self.isWall = isWall
 		self.coord = coord
 		self.hasItem = False
-		#self.item = Item('test')
+		self.item = Item('null')
 
 	#Getsetters
 
@@ -90,6 +90,7 @@ class Item:
 		self.name = name
 		self.gotItem = False
 		self.coord = Coordinates(0, 0)
+		self.image = None
 
 	#Getsetters
 
@@ -107,6 +108,12 @@ class Item:
 	def setCoord(self, coord):
 		self.coord = coord
 
+	def getImage(self):
+		return self.image
+
+	def setImage(self, image):
+		self.image = pygame.image.load(image).convert_alpha()
+
 ##Main method
 
 def main():
@@ -123,11 +130,12 @@ def main():
 	player = Player(Coordinates(8, 13))
 	exit = Coordinates(0, 0)
 	tp = pygame.image.load("player.png").convert_alpha()
-	testitem = pygame.image.load("exit.png").convert_alpha()
+
 
 	grid = generateGrid(player, exit)
 
 	needle = Item("Needle")
+	needle.setImage("item1.png")
 	print(str(needle.coord.x) + ";" + str(needle.coord.y))
 	needle.coord = generateRandomCoordinates()
 	#for square in grid:
@@ -143,10 +151,12 @@ def main():
 	#print(str(needle.coord.x) + ";" + str(needle.coord.y))
 
 	ether = Item("Ether")
+	ether.setImage("item2.png")
 	ether.coord = generateRandomCoordinates()
 	grid = putItemInGrid(grid, ether, player, exit)
 
 	tube = Item("Tube")
+	tube.setImage("item3.png")
 	tube.coord = generateRandomCoordinates()
 	grid = putItemInGrid(grid, tube, player, exit)
 
@@ -155,7 +165,7 @@ def main():
 			print(str(square.coord.x) + ";" + str(square.coord.y) + "has an item")
 
 	#Display of the grid
-	displayGrid(grid, window, wall, background, testitem)
+	displayGrid(grid, window, wall, background, needle, ether, tube)
 	window.blit(tp, (player.getCoord().x * 30, player.getCoord().y * 30))
 	tppos = tp.get_rect()
 	pygame.display.flip()
@@ -175,8 +185,8 @@ def main():
 						if square.coord.y == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background, testitem)
-							player.setCoord(square.coord.x, square.coord.y)
+							displayGrid(grid, window, wall, background, needle, ether, tube)
+							player.setCoord(Coordinates(square.coord.x, square.coord.y))
 							tppos.move(0, 30)
 							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
@@ -191,8 +201,8 @@ def main():
 						if square.coord.y == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background, testitem)
-							player.setCoord(square.coord.x, square.coord.y)
+							displayGrid(grid, window, wall, background, needle, ether, tube)
+							player.setCoord(Coordinates(square.coord.x, square.coord.y))
 							tppos.move(0, -30)
 							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
@@ -207,8 +217,8 @@ def main():
 						if square.coord.x == (player.coord.x - 1) and square.coord.y == player.coord.y and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background, testitem)
-							player.setCoord(square.coord.x, square.coord.y)
+							displayGrid(grid, window, wall, background, needle, ether, tube)
+							player.setCoord(Coordinates(square.coord.x, square.coord.y))
 							tppos.move(-30, 0)
 							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
@@ -223,8 +233,8 @@ def main():
 						if square.coord.x == (player.coord.x + 1) and square.coord.y == player.coord.y and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background, testitem)
-							player.setCoord(square.coord.x, square.coord.y)
+							displayGrid(grid, window, wall, background, needle, ether, tube)
+							player.setCoord(Coordinates(square.coord.x, square.coord.y))
 							tppos.move(30, 0)
 							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
@@ -296,10 +306,11 @@ def generateGrid(player, exit):
 	return grid
 
 #Method to display the grid
-def displayGrid(grid, window, wall, background, item):
+def displayGrid(grid, window, wall, background, item1, item2, item3):
 		count = 0
 		pos_x = 0
 		pos_y = 0
+		itemPlace = 1
 		window.blit(background, (0, 0))
 
 		for square in grid:
@@ -315,7 +326,14 @@ def displayGrid(grid, window, wall, background, item):
 
 				else:
 					if square.hasItem == True:
-						window.blit(item, (square.coord.x * 30, square.coord.y * 30))
+						if itemPlace == 1:
+							window.blit(item1.getImage(), (square.coord.x * 30, square.coord.y * 30))
+							itemPlace += 1
+						if itemPlace == 2:
+							window.blit(item2.getImage(), (square.coord.x * 30, square.coord.y * 30))
+							itemPlace += 1
+						if itemPlace == 3:
+							window.blit(item1.getImage(), (square.coord.x * 30, square.coord.y * 30))
 					pos_x += 30
 					count += 1
 					if count == 15:
