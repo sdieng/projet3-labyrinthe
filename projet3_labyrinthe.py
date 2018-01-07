@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-#######################################################
-## A faire : capture d'événements (fin) et animation ##
-#######################################################
+#############################################################
+## A faire :  condition victoire                           ##
+#############################################################
 
 ##Import zone
 import pygame
@@ -23,13 +23,21 @@ class Player:
 		y = self.coord.y
 		return Coordinates(x, y)
 
-	def setCoord(self, x, y):
-		self.coord.x = x
-		self.coord.y = y
+	def setCoord(self, coord):
+		self.coord = coord
 
 #A class to stock the coordinates of a square, player or item
 class Coordinates:
 	def __init__(self, x, y):
+		self.x = x
+		self.y = y
+
+	def getCoord(self):
+		x = self.x
+		y = self.y
+		return Coordinates(x, y)
+
+	def setCoord(self, x, y):
 		self.x = x
 		self.y = y
 
@@ -113,10 +121,11 @@ def main():
 
 	#Initialization of the player and the grid
 	player = Player(Coordinates(8, 13))
+	exit = Coordinates(0, 0)
 	tp = pygame.image.load("player.png").convert_alpha()
 	testitem = pygame.image.load("exit.png").convert_alpha()
 
-	grid = generateGrid()
+	grid = generateGrid(player, exit)
 
 	needle = Item("Needle")
 	print(str(needle.coord.x) + ";" + str(needle.coord.y))
@@ -126,7 +135,7 @@ def main():
 			#print(square.isWall)
 			#print(square.hasItem)
 	#print(str(needle.coord.x) + ";" + str(needle.coord.y))
-	grid = putItemInGrid(grid, needle)
+	grid = putItemInGrid(grid, needle, player, exit)
 	#for square in grid:
 		#if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
 			#print(square.isWall)
@@ -135,11 +144,11 @@ def main():
 
 	ether = Item("Ether")
 	ether.coord = generateRandomCoordinates()
-	grid = putItemInGrid(grid, ether)
+	grid = putItemInGrid(grid, ether, player, exit)
 
 	tube = Item("Tube")
 	tube.coord = generateRandomCoordinates()
-	grid = putItemInGrid(grid, tube)
+	grid = putItemInGrid(grid, tube, player, exit)
 
 	for square in grid:
 		if square.hasItem == True:
@@ -147,7 +156,7 @@ def main():
 
 	#Display of the grid
 	displayGrid(grid, window, wall, background, testitem)
-	window.blit(tp, (240, 390))
+	window.blit(tp, (player.getCoord().x * 30, player.getCoord().y * 30))
 	tppos = tp.get_rect()
 	pygame.display.flip()
 
@@ -233,7 +242,7 @@ def generateRandomCoordinates():
 	return coord
 
 #Method to generate the grid
-def generateGrid():
+def generateGrid(player, exit):
 	with open('grid.txt') as txtgrid:
 	    strgrid = ''.join(line.strip() for line in txtgrid)
 	    chrlistGrid = list(strgrid)
@@ -254,6 +263,26 @@ def generateGrid():
 
 		    elif entry == 'X':
 			    grid.append(Square(coord, False))
+			    if x < 14:
+				    x = x + 1
+
+			    elif x == 14:
+				    x = 0
+				    y = y + 1
+
+		    elif entry == 'S':
+			    grid.append(Square(coord, False))
+			    player.setCoord(Coordinates(x, y))
+			    if x < 14:
+				    x = x + 1
+
+			    elif x == 14:
+				    x = 0
+				    y = y + 1
+
+		    elif entry == 'E':
+			    grid.append(Square(coord, False))
+			    exit.setCoord(x, y)
 			    if x < 14:
 				    x = x + 1
 
@@ -294,19 +323,24 @@ def displayGrid(grid, window, wall, background, item):
 						pos_x = 0
 						pos_y += 30
 
-def putItemInGrid(grid, item):
+def putItemInGrid(grid, item, player, exit):
 	for square in grid:
 		if square.getCoord().x == item.getCoord().x and square.getCoord().y == item.getCoord().y:
-			if square.hasItem == True:
+			if (item.getCoord().x != exit.getCoord().x and item.getCoord().y != exit.getCoord().y) and (item.getCoord().x != player.getCoord().x and item.getCoord().y != player.getCoord().y):
+				if square.hasItem == True:
+					item.setCoord(generateRandomCoordinates())
+					putItemInGrid(grid, item, player, exit)
+					break
+				if square.getIsWall() == True:
+					item.setCoord(generateRandomCoordinates())
+					putItemInGrid(grid, item, player, exit)
+					break
+				if square.getIsWall() == False and square.getHasItem() == False:
+					square.setHasItem(True)
+					break
+			else:
 				item.setCoord(generateRandomCoordinates())
-				putItemInGrid(grid, item)
-				break
-			if square.getIsWall() == True:
-				item.setCoord(generateRandomCoordinates())
-				putItemInGrid(grid, item)
-				break
-			if square.getIsWall() == False and square.getHasItem() == False:
-				square.setHasItem(True)
+				putItemInGrid(grid, item, player, exit)
 				break
 
 	return grid
