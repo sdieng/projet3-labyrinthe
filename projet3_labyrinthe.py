@@ -105,14 +105,14 @@ def main():
 	window.blit(background,(0, 0))
 
 	#Initialization of the player and the grid
-	player = Player(Coordinates(8, 1))
+	player = Player(Coordinates(8, 13))
 	tp = pygame.image.load("player.png").convert_alpha()
 
 	grid = generateGrid()
 
 	#Display of the grid
 	displayGrid(grid, window, wall, background)
-	window.blit(tp, (210, 430))
+	window.blit(tp, (240, 390))
 	tppos = tp.get_rect()
 	pygame.display.flip()
 
@@ -128,13 +128,13 @@ def main():
 			if event.type == KEYDOWN:
 				if event.key == K_DOWN:
 					for square in grid:
-						if square.coord.y == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
+						if square.coord.y == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(0, 30)
-							window.blit(tp, (player.coord.x * 30, 420 - (player.coord.y * 30)))
+							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
@@ -142,13 +142,13 @@ def main():
 
 				if event.key == K_UP:
 					for square in grid:
-						if square.coord.y == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
+						if square.coord.y == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(0, -30)
-							window.blit(tp, (player.coord.x * 30, 420 - (player.coord.y * 30)))
+							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
@@ -162,7 +162,7 @@ def main():
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(-30, 0)
-							window.blit(tp, (player.coord.x * 30, 420 - (player.coord.y * 30)))
+							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
@@ -176,7 +176,7 @@ def main():
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(30, 0)
-							window.blit(tp, (player.coord.x * 30, 420 - (player.coord.y * 30)))
+							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
