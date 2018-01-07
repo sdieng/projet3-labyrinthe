@@ -46,13 +46,13 @@ class Square:
 	def getIsWall(self):
 		return self.isWall
 
-	def setIsWall(state):
+	def setIsWall(self, state):
 		self.isWall = state
 
 	def getHasItem(self):
 		return self.hasItem
 
-	def setHasItem(state):
+	def setHasItem(self, state):
 		self.hasItem = state
 
 	def getCoord(self):
@@ -64,11 +64,9 @@ class Square:
 		self.coord.x = x
 		self.coord.y = y
 
-	def setItem(self, item):
-		self.item = item
 
     #Method to check if the movement input is valid (not a wall) and to get
-	#the item on the square if there is one
+	#the item on the square if there is one (DELETE)
 	def checkMove(grid, player, coord):
 		for square in grid:
 			if square.coord == coord:
@@ -83,6 +81,7 @@ class Item:
 	def __init__(self, name):
 		self.name = name
 		self.gotItem = False
+		self.coord = Coordinates(0, 0)
 
 	#Getsetters
 
@@ -107,11 +106,39 @@ def main():
 	#Initialization of the player and the grid
 	player = Player(Coordinates(8, 13))
 	tp = pygame.image.load("player.png").convert_alpha()
+	testitem = pygame.image.load("exit.png").convert_alpha()
 
 	grid = generateGrid()
 
+	needle = Item("Needle")
+	print(str(needle.coord.x) + ";" + str(needle.coord.y))
+	needle.coord = generateRandomCoordinates()
+	for square in grid:
+		if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
+			print(square.isWall)
+			print(square.hasItem)
+	print(str(needle.coord.x) + ";" + str(needle.coord.y))
+	grid = putItemInGrid(grid, needle)
+	for square in grid:
+		if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
+			print(square.isWall)
+			print(square.hasItem)
+	print(str(needle.coord.x) + ";" + str(needle.coord.y))
+
+	ether = Item("Ether")
+	ether.coord = generateRandomCoordinates()
+	grid = putItemInGrid(grid, ether)
+
+	tube = Item("Tube")
+	tube.coord = generateRandomCoordinates()
+	grid = putItemInGrid(grid, tube)
+
+	for square in grid:
+		if square.hasItem == True:
+			print(str(square.coord.x) + ";" + str(square.coord.y) + "has an item")
+
 	#Display of the grid
-	displayGrid(grid, window, wall, background)
+	displayGrid(grid, window, wall, background, testitem)
 	window.blit(tp, (240, 390))
 	tppos = tp.get_rect()
 	pygame.display.flip()
@@ -131,12 +158,14 @@ def main():
 						if square.coord.y == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background)
+							displayGrid(grid, window, wall, background, testitem)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(0, 30)
 							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
+								square.setHasItem(False)
+								print("Got Item no." + str(itemCount))
 							pygame.display.flip()
 							break
 
@@ -145,12 +174,14 @@ def main():
 						if square.coord.y == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background)
+							displayGrid(grid, window, wall, background, testitem)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(0, -30)
 							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
+								square.setHasItem(False)
+								print("Got Item no." + str(itemCount))
 							pygame.display.flip()
 							break
 
@@ -159,12 +190,14 @@ def main():
 						if square.coord.x == (player.coord.x - 1) and square.coord.y == player.coord.y and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background)
+							displayGrid(grid, window, wall, background, testitem)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(-30, 0)
 							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
+								square.setHasItem(False)
+								print("Got Item no." + str(itemCount))
 							pygame.display.flip()
 							break
 
@@ -173,12 +206,14 @@ def main():
 						if square.coord.x == (player.coord.x + 1) and square.coord.y == player.coord.y and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background)
+							displayGrid(grid, window, wall, background, testitem)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(30, 0)
 							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
+								square.setHasItem(False)
+								print("Got Item no." + str(itemCount))
 							pygame.display.flip()
 							break
 
@@ -224,7 +259,7 @@ def generateGrid():
 	return grid
 
 #Method to display the grid
-def displayGrid(grid, window, wall, background):
+def displayGrid(grid, window, wall, background, item):
 		count = 0
 		pos_x = 0
 		pos_y = 0
@@ -242,11 +277,25 @@ def displayGrid(grid, window, wall, background):
 						pos_y += 30
 
 				else:
+					if square.hasItem == True:
+						window.blit(item, (square.coord.x * 30, square.coord.y * 30))
 					pos_x += 30
 					count += 1
 					if count == 15:
 						count = 0
 						pos_x = 0
 						pos_y += 30
+
+def putItemInGrid(grid, item):
+	for square in grid:
+		if square.coord.x == item.coord.x and square.coord.y == item.coord.y:
+			if square.isWall == False and square.hasItem == False:
+				square.setHasItem(True)
+				break
+			if square.isWall == True or square.hasItem == True:
+				item.coord = generateRandomCoordinates()
+				putItemInGrid(grid, item)
+
+	return grid
 
 main()
