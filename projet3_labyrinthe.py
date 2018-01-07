@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-##################################################################################
-## A faire : contrôle des données, capture d'événements (déplacement et fin)    ##
-##################################################################################
+#######################################################
+## A faire : capture d'événements (fin) et animation ##
+#######################################################
 
 ##Import zone
 import pygame
@@ -110,7 +110,7 @@ def main():
 
 	grid = generateGrid()
 
-	#Display of the maze
+	#Display of the grid
 	displayGrid(grid, window, wall, background)
 	window.blit(tp, (210, 430))
 	tppos = tp.get_rect()
@@ -134,7 +134,7 @@ def main():
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(0, 30)
-							window.blit(tp, tppos)
+							window.blit(tp, (player.coord.x * 30, 420 - (player.coord.y * 30)))
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
@@ -148,7 +148,7 @@ def main():
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(0, -30)
-							window.blit(tp, tppos)
+							window.blit(tp, (player.coord.x * 30, 420 - (player.coord.y * 30)))
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
@@ -162,7 +162,7 @@ def main():
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(-30, 0)
-							window.blit(tp, (tppos[0], tppos[1]))
+							window.blit(tp, (player.coord.x * 30, 420 - (player.coord.y * 30)))
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
@@ -176,7 +176,7 @@ def main():
 							displayGrid(grid, window, wall, background)
 							player.setCoord(square.coord.x, square.coord.y)
 							tppos.move(30, 0)
-							window.blit(tp, (tppos[0], tppos[1]))
+							window.blit(tp, (player.coord.x * 30, 420 - (player.coord.y * 30)))
 							if square.hasItem == True:
 								itemCount += 1
 							pygame.display.flip()
