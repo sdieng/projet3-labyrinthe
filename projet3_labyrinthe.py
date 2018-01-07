@@ -91,6 +91,14 @@ class Item:
 	def setGotItem(state):
 		self.gotItem = state
 
+	def getCoord(self):
+		x = self.coord.x
+		y = self.coord.y
+		return Coordinates(x, y)
+
+	def setCoord(self, coord):
+		self.coord = coord
+
 ##Main method
 
 def main():
@@ -113,17 +121,17 @@ def main():
 	needle = Item("Needle")
 	print(str(needle.coord.x) + ";" + str(needle.coord.y))
 	needle.coord = generateRandomCoordinates()
-	for square in grid:
-		if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
-			print(square.isWall)
-			print(square.hasItem)
-	print(str(needle.coord.x) + ";" + str(needle.coord.y))
+	#for square in grid:
+		#if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
+			#print(square.isWall)
+			#print(square.hasItem)
+	#print(str(needle.coord.x) + ";" + str(needle.coord.y))
 	grid = putItemInGrid(grid, needle)
-	for square in grid:
-		if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
-			print(square.isWall)
-			print(square.hasItem)
-	print(str(needle.coord.x) + ";" + str(needle.coord.y))
+	#for square in grid:
+		#if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
+			#print(square.isWall)
+			#print(square.hasItem)
+	#print(str(needle.coord.x) + ";" + str(needle.coord.y))
 
 	ether = Item("Ether")
 	ether.coord = generateRandomCoordinates()
@@ -288,13 +296,18 @@ def displayGrid(grid, window, wall, background, item):
 
 def putItemInGrid(grid, item):
 	for square in grid:
-		if square.coord.x == item.coord.x and square.coord.y == item.coord.y:
-			if square.isWall == False and square.hasItem == False:
+		if square.getCoord().x == item.getCoord().x and square.getCoord().y == item.getCoord().y:
+			if square.hasItem == True:
+				item.setCoord(generateRandomCoordinates())
+				putItemInGrid(grid, item)
+				break
+			if square.getIsWall() == True:
+				item.setCoord(generateRandomCoordinates())
+				putItemInGrid(grid, item)
+				break
+			if square.getIsWall() == False and square.getHasItem() == False:
 				square.setHasItem(True)
 				break
-			if square.isWall == True or square.hasItem == True:
-				item.coord = generateRandomCoordinates()
-				putItemInGrid(grid, item)
 
 	return grid
 
