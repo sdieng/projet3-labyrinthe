@@ -149,6 +149,8 @@ def main():
 	window = pygame.display.set_mode((450, 450))
 	background = pygame.image.load("background.jpg").convert()
 	wall = pygame.image.load("wall.png").convert()
+	win = pygame.image.load("win.png").convert()
+	lose = pygame.image.load("lose.png").convert()
 
 	#Initialization of the player and the grid
 	player = Player()
@@ -217,11 +219,15 @@ def main():
 								if itemCount == 3:
 									exit.empty()
 									displayGrid(grid, window, wall, background, exit, player)
+									window.blit(lose, (0, 150))
+									pygame.display.flip()
 									print("You win !!!")
 									running = 1
 								else:
 									player.empty()
 									displayGrid(grid, window, wall, background, exit, player)
+									window.blit(win, (0, 150))
+									pygame.display.flip()
 									print("You lose !!!")
 									running = 1
 							break
@@ -244,11 +250,15 @@ def main():
 								if itemCount == 3:
 									exit.empty()
 									displayGrid(grid, window, wall, background, exit, player)
+									window.blit(win, (0, 150))
+									pygame.display.flip()
 									print("You win !!!")
 									running = 1
 								else:
 									player.empty()
 									displayGrid(grid, window, wall, background, exit, player)
+									window.blit(lose, (0, 150))
+									pygame.display.flip()
 									print("You lose !!!")
 									running = 1
 							break
@@ -271,11 +281,15 @@ def main():
 								if itemCount == 3:
 									exit.empty()
 									displayGrid(grid, window, wall, background, exit, player)
+									window.blit(win, (0, 150))
+									pygame.display.flip()
 									print("You win !!!")
 									running = 1
 								else:
 									player.empty()
 									displayGrid(grid, window, wall, background, exit, player)
+									window.blit(lose, (0, 150))
+									pygame.display.flip()
 									print("You lose !!!")
 									running = 1
 							break
@@ -298,11 +312,15 @@ def main():
 								if itemCount == 3:
 									exit.empty()
 									displayGrid(grid, window, wall, background, exit, player)
+									window.blit(win, (0, 150))
+									pygame.display.flip()
 									print("You win !!!")
 									running = 1
 								else:
 									player.empty()
 									displayGrid(grid, window, wall, background, exit, player)
+									window.blit(lose, (0, 150))
+									pygame.display.flip()
 									print("You lose !!!")
 									running = 1
 							break
