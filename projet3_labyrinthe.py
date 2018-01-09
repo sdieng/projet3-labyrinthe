@@ -184,6 +184,7 @@ def main():
 	displayGrid(grid, window, wall, background, exit, player)
 
 	##Event capture zone
+
 	running = 1
 	capture = 1
 	itemCount = 0
@@ -191,10 +192,12 @@ def main():
 	while running:
 		for event in pygame.event.get():
 			if event.type == QUIT:
+				capture = 0
 				running = 0
 		while capture:
 			for event in pygame.event.get():
 				if event.type == QUIT:
+					capture = 0
 					running = 0
 
 				#Movement
