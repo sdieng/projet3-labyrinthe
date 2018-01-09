@@ -72,6 +72,12 @@ class Square:
 		self.coord.x = x
 		self.coord.y = y
 
+	def setItem(self, item):
+		self.item = item
+
+	def getItem(self):
+		return self.item
+
 
     #Method to check if the movement input is valid (not a wall) and to get
 	#the item on the square if there is one (DELETE)
@@ -97,7 +103,7 @@ class Item:
 	def getGotItem(self):
 		return self.gotItem
 
-	def setGotItem(state):
+	def setGotItem(self, state):
 		self.gotItem = state
 
 	def getCoord(self):
@@ -192,6 +198,7 @@ def main():
 							if square.hasItem == True:
 								itemCount += 1
 								square.setHasItem(False)
+								square.getItem().setGotItem(True)
 								print("Got Item no." + str(itemCount))
 							pygame.display.flip()
 							break
@@ -208,6 +215,7 @@ def main():
 							if square.hasItem == True:
 								itemCount += 1
 								square.setHasItem(False)
+								square.getItem().setGotItem(True)
 								print("Got Item no." + str(itemCount))
 							pygame.display.flip()
 							break
@@ -224,6 +232,7 @@ def main():
 							if square.hasItem == True:
 								itemCount += 1
 								square.setHasItem(False)
+								square.getItem().setGotItem(True)
 								print("Got Item no." + str(itemCount))
 							pygame.display.flip()
 							break
@@ -240,6 +249,7 @@ def main():
 							if square.hasItem == True:
 								itemCount += 1
 								square.setHasItem(False)
+								square.getItem().setGotItem(True)
 								print("Got Item no." + str(itemCount))
 							pygame.display.flip()
 							break
@@ -326,14 +336,8 @@ def displayGrid(grid, window, wall, background, item1, item2, item3):
 
 				else:
 					if square.hasItem == True:
-						if itemPlace == 1:
-							window.blit(item1.getImage(), (square.coord.x * 30, square.coord.y * 30))
-							itemPlace += 1
-						if itemPlace == 2:
-							window.blit(item2.getImage(), (square.coord.x * 30, square.coord.y * 30))
-							itemPlace += 1
-						if itemPlace == 3:
-							window.blit(item1.getImage(), (square.coord.x * 30, square.coord.y * 30))
+						window.blit(square.getItem().getImage(), (square.coord.x * 30, square.coord.y * 30))
+
 					pos_x += 30
 					count += 1
 					if count == 15:
@@ -355,6 +359,7 @@ def putItemInGrid(grid, item, player, exit):
 					break
 				if square.getIsWall() == False and square.getHasItem() == False:
 					square.setHasItem(True)
+					square.setItem(item)
 					break
 			else:
 				item.setCoord(generateRandomCoordinates())
