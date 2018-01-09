@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #############################################################
-## A faire :  condition victoire                           ##
+## A faire :  nettoyer code, attention aux getsetters      ##
 #############################################################
 
 ##Import zone
