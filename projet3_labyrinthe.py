@@ -12,11 +12,9 @@ import random
 
 #A class to define the attributes of the player
 class Player:
-	def __init__(self, coord):
-		self.coord = coord
-		self.image = pygame.transform.scale(pygame.image.load("player.png").convert_alpha(), (30, 30))
-		self.position = self.image.get_rect()
-
+	def __init__(self):
+		self.coord = None
+		self.image = pygame.image.load("player.png").convert_alpha()
 
 	def getCoord(self):
 		x = self.coord.x
@@ -25,6 +23,25 @@ class Player:
 
 	def setCoord(self, coord):
 		self.coord = coord
+
+	def getImage(self):
+		return self.image
+
+class Exit:
+	def __init__(self):
+		self.coord = None
+		self.image = pygame.image.load("exit.png").convert_alpha()
+
+	def getCoord(self):
+		x = self.coord.x
+		y = self.coord.y
+		return Coordinates(x, y)
+
+	def setCoord(self, coord):
+		self.coord = coord
+
+	def getImage(self):
+		return self.image
 
 #A class to stock the coordinates of a square, player or item
 class Coordinates:
@@ -53,7 +70,7 @@ class Square:
 		self.isWall = isWall
 		self.coord = coord
 		self.hasItem = False
-		self.item = Item('null')
+		self.item = Item(None)
 
 	#Getsetters
 
@@ -85,23 +102,13 @@ class Square:
 		return self.item
 
 
-    #Method to check if the movement input is valid (not a wall) and to get
-	#the item on the square if there is one (DELETE)
-	def checkMove(grid, player, coord):
-		for square in grid:
-			if square.coord == coord:
-				if square.getIsWall() == False:
-					player.setCoord(coord)
-					if square.getHasItem() == True:
-						square.item.setGotItem(True)
-
 #A class to define the items by a name and a boolean to know if the player
 #got the item
 class Item:
 	def __init__(self, name):
 		self.name = name
 		self.gotItem = False
-		self.coord = Coordinates(0, 0)
+		self.coord = Coordinates(None, None)
 		self.image = None
 
 	#Getsetters
@@ -139,12 +146,10 @@ def main():
 	window.blit(background,(0, 0))
 
 	#Initialization of the player and the grid
-	player = Player(Coordinates(8, 13))
-	exit = Coordinates(0, 0)
-	tp = pygame.image.load("player.png").convert_alpha()
-
-
+	player = Player()
+	exit = Exit()
 	grid = generateGrid(player, exit)
+	print("Exit at " + str(exit.getCoord().getX()) + ";" + str(exit.getCoord().getY()))
 
 	needle = Item("Needle")
 	needle.setImage("item1.png")
@@ -177,10 +182,7 @@ def main():
 			print(str(square.coord.x) + ";" + str(square.coord.y) + "has an item")
 
 	#Display of the grid
-	displayGrid(grid, window, wall, background)
-	window.blit(tp, (player.getCoord().x * 30, player.getCoord().y * 30))
-	tppos = tp.get_rect()
-	pygame.display.flip()
+	displayGrid(grid, window, wall, background, exit, player)
 
 	##Event capture zone
 	running = 1
@@ -197,10 +199,9 @@ def main():
 						if square.coord.y == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background)
+							displayGrid(grid, window, wall, background, exit, player)
 							player.setCoord(Coordinates(square.coord.x, square.coord.y))
-							tppos.move(0, 30)
-							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
+							window.blit(player.getImage(), (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
 								square.setHasItem(False)
@@ -214,10 +215,9 @@ def main():
 						if square.coord.y == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background)
+							displayGrid(grid, window, wall, background, exit, player)
 							player.setCoord(Coordinates(square.coord.x, square.coord.y))
-							tppos.move(0, -30)
-							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
+							window.blit(player.getImage(), (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
 								square.setHasItem(False)
@@ -231,10 +231,9 @@ def main():
 						if square.coord.x == (player.coord.x - 1) and square.coord.y == player.coord.y and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background)
+							displayGrid(grid, window, wall, background, exit, player)
 							player.setCoord(Coordinates(square.coord.x, square.coord.y))
-							tppos.move(-30, 0)
-							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
+							window.blit(player.getImage(), (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
 								square.setHasItem(False)
@@ -248,10 +247,9 @@ def main():
 						if square.coord.x == (player.coord.x + 1) and square.coord.y == player.coord.y and square.isWall == False:
 							print("OK MOVE")
 							print(str(square.coord.x) + ";" + str(square.coord.y))
-							displayGrid(grid, window, wall, background)
+							displayGrid(grid, window, wall, background, exit, player)
 							player.setCoord(Coordinates(square.coord.x, square.coord.y))
-							tppos.move(30, 0)
-							window.blit(tp, (player.coord.x * 30, player.coord.y * 30))
+							window.blit(player.getImage(), (player.coord.x * 30, player.coord.y * 30))
 							if square.hasItem == True:
 								itemCount += 1
 								square.setHasItem(False)
@@ -308,7 +306,7 @@ def generateGrid(player, exit):
 
 		    elif entry == 'E':
 			    grid.append(Square(coord, False))
-			    exit.setCoord(x, y)
+			    exit.setCoord(Coordinates(x, y))
 			    if x < 14:
 				    x = x + 1
 
@@ -316,14 +314,13 @@ def generateGrid(player, exit):
 				    x = 0
 				    y = y + 1
 
-	##syringe = Item('ether')
-	##tube = Item('tube')
-	##needle = Item('aiguille')
 	return grid
 
 #Method to display the grid
-def displayGrid(grid, window, wall, background):
+def displayGrid(grid, window, wall, background, exit, player):
 		window.blit(background, (0, 0))
+		window.blit(player.getImage(), (player.getCoord().x * 30, player.getCoord().y * 30))
+		window.blit(exit.getImage(), (exit.getCoord().getX() * 30, exit.getCoord().getY() * 30))
 
 		for square in grid:
 			if square.isWall == True:
@@ -332,6 +329,7 @@ def displayGrid(grid, window, wall, background):
 			else:
 				if square.hasItem == True:
 					window.blit(square.getItem().getImage(), (square.coord.x * 30, square.coord.y * 30))
+		pygame.display.flip()
 
 def putItemInGrid(grid, item, player, exit):
 	for square in grid:
