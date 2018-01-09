@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-#############################################################
-## A faire :  nettoyer code, attention aux getsetters      ##
-#############################################################
+#######################################################################
+## A faire :  nettoyer code, attention aux getsetters, commenter     ##
+#######################################################################
 
 ##Import zone
 import pygame
@@ -162,17 +162,9 @@ def main():
 	needle.setImage("item1.png")
 	print(str(needle.coord.x) + ";" + str(needle.coord.y))
 	needle.coord = generateRandomCoordinates()
-	#for square in grid:
-		#if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
-			#print(square.isWall)
-			#print(square.hasItem)
-	#print(str(needle.coord.x) + ";" + str(needle.coord.y))
+
 	grid = putItemInGrid(grid, needle, player, exit)
-	#for square in grid:
-		#if square.coord.x == needle.coord.x and square.coord.y == needle.coord.y:
-			#print(square.isWall)
-			#print(square.hasItem)
-	#print(str(needle.coord.x) + ";" + str(needle.coord.y))
+
 
 	ether = Item("Ether")
 	ether.setImage("item2.png")
@@ -193,137 +185,143 @@ def main():
 
 	##Event capture zone
 	running = 1
+	capture = 1
 	itemCount = 0
+
 	while running:
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				running = 0
+		while capture:
+			for event in pygame.event.get():
+				if event.type == QUIT:
+					running = 0
 
-			#Movement
-			if event.type == KEYDOWN:
-				if event.key == K_DOWN:
-					for square in grid:
-						if square.coord.y == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
-							print("OK MOVE")
-							print(str(square.coord.x) + ";" + str(square.coord.y))
-							player.setCoord(Coordinates(square.coord.x, square.coord.y))
-							displayGrid(grid, window, wall, background, exit, player)
-							if square.hasItem == True:
-								itemCount += 1
-								square.setHasItem(False)
-								square.getItem().setGotItem(True)
+				#Movement
+				if event.type == KEYDOWN:
+					if event.key == K_DOWN:
+						for square in grid:
+							if square.coord.y == (player.coord.y + 1) and square.coord.x == player.coord.x and square.isWall == False:
+								print("OK MOVE")
+								print(str(square.coord.x) + ";" + str(square.coord.y))
+								player.setCoord(Coordinates(square.coord.x, square.coord.y))
 								displayGrid(grid, window, wall, background, exit, player)
-								print("Got Item no." + str(itemCount))
-							pygame.display.flip()
-							if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
-								if itemCount == 3:
-									exit.empty()
+								if square.hasItem == True:
+									itemCount += 1
+									square.setHasItem(False)
+									square.getItem().setGotItem(True)
 									displayGrid(grid, window, wall, background, exit, player)
-									window.blit(lose, (0, 150))
-									pygame.display.flip()
-									print("You win !!!")
-									running = 1
-								else:
-									player.empty()
-									displayGrid(grid, window, wall, background, exit, player)
-									window.blit(win, (0, 150))
-									pygame.display.flip()
-									print("You lose !!!")
-									running = 1
-							break
+									print("Got Item no." + str(itemCount))
+								pygame.display.flip()
+								if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
+									if itemCount == 3:
+										exit.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(lose, (0, 150))
+										pygame.display.flip()
+										print("You win !!!")
+										capture = 0
+									else:
+										player.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(win, (0, 150))
+										pygame.display.flip()
+										print("You lose !!!")
+										capture = 0
+								break
 
-				if event.key == K_UP:
-					for square in grid:
-						if square.coord.y == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
-							print("OK MOVE")
-							print(str(square.coord.x) + ";" + str(square.coord.y))
-							player.setCoord(Coordinates(square.coord.x, square.coord.y))
-							displayGrid(grid, window, wall, background, exit, player)
-							if square.hasItem == True:
-								itemCount += 1
-								square.setHasItem(False)
-								square.getItem().setGotItem(True)
+					if event.key == K_UP:
+						for square in grid:
+							if square.coord.y == (player.coord.y - 1) and square.coord.x == player.coord.x and square.isWall == False:
+								print("OK MOVE")
+								print(str(square.coord.x) + ";" + str(square.coord.y))
+								player.setCoord(Coordinates(square.coord.x, square.coord.y))
 								displayGrid(grid, window, wall, background, exit, player)
-								print("Got Item no." + str(itemCount))
-							pygame.display.flip()
-							if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
-								if itemCount == 3:
-									exit.empty()
+								if square.hasItem == True:
+									itemCount += 1
+									square.setHasItem(False)
+									square.getItem().setGotItem(True)
 									displayGrid(grid, window, wall, background, exit, player)
-									window.blit(win, (0, 150))
-									pygame.display.flip()
-									print("You win !!!")
-									running = 1
-								else:
-									player.empty()
-									displayGrid(grid, window, wall, background, exit, player)
-									window.blit(lose, (0, 150))
-									pygame.display.flip()
-									print("You lose !!!")
-									running = 1
-							break
+									print("Got Item no." + str(itemCount))
+								pygame.display.flip()
+								if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
+									if itemCount == 3:
+										exit.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(win, (0, 150))
+										pygame.display.flip()
+										print("You win !!!")
+										capture = 0
+									else:
+										player.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(lose, (0, 150))
+										pygame.display.flip()
+										print("You lose !!!")
+										capture = 0
+								break
 
-				if event.key == K_LEFT:
-					for square in grid:
-						if square.coord.x == (player.coord.x - 1) and square.coord.y == player.coord.y and square.isWall == False:
-							print("OK MOVE")
-							print(str(square.coord.x) + ";" + str(square.coord.y))
-							player.setCoord(Coordinates(square.coord.x, square.coord.y))
-							displayGrid(grid, window, wall, background, exit, player)
-							if square.hasItem == True:
-								itemCount += 1
-								square.setHasItem(False)
-								square.getItem().setGotItem(True)
+					if event.key == K_LEFT:
+						for square in grid:
+							if square.coord.x == (player.coord.x - 1) and square.coord.y == player.coord.y and square.isWall == False:
+								print("OK MOVE")
+								print(str(square.coord.x) + ";" + str(square.coord.y))
+								player.setCoord(Coordinates(square.coord.x, square.coord.y))
 								displayGrid(grid, window, wall, background, exit, player)
-								print("Got Item no." + str(itemCount))
-							pygame.display.flip()
-							if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
-								if itemCount == 3:
-									exit.empty()
+								if square.hasItem == True:
+									itemCount += 1
+									square.setHasItem(False)
+									square.getItem().setGotItem(True)
 									displayGrid(grid, window, wall, background, exit, player)
-									window.blit(win, (0, 150))
-									pygame.display.flip()
-									print("You win !!!")
-									running = 1
-								else:
-									player.empty()
-									displayGrid(grid, window, wall, background, exit, player)
-									window.blit(lose, (0, 150))
-									pygame.display.flip()
-									print("You lose !!!")
-									running = 1
-							break
+									print("Got Item no." + str(itemCount))
+								pygame.display.flip()
+								if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
+									if itemCount == 3:
+										exit.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(win, (0, 150))
+										pygame.display.flip()
+										print("You win !!!")
+										capture = 0
+									else:
+										player.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(lose, (0, 150))
+										pygame.display.flip()
+										print("You lose !!!")
+										capture = 0
+								break
 
-				if event.key == K_RIGHT:
-					for square in grid:
-						if square.coord.x == (player.coord.x + 1) and square.coord.y == player.coord.y and square.isWall == False:
-							print("OK MOVE")
-							print(str(square.coord.x) + ";" + str(square.coord.y))
-							player.setCoord(Coordinates(square.coord.x, square.coord.y))
-							displayGrid(grid, window, wall, background, exit, player)
-							if square.hasItem == True:
-								itemCount += 1
-								square.setHasItem(False)
-								square.getItem().setGotItem(True)
+					if event.key == K_RIGHT:
+						for square in grid:
+							if square.coord.x == (player.coord.x + 1) and square.coord.y == player.coord.y and square.isWall == False:
+								print("OK MOVE")
+								print(str(square.coord.x) + ";" + str(square.coord.y))
+								player.setCoord(Coordinates(square.coord.x, square.coord.y))
 								displayGrid(grid, window, wall, background, exit, player)
-								print("Got Item no." + str(itemCount))
-							pygame.display.flip()
-							if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
-								if itemCount == 3:
-									exit.empty()
+								if square.hasItem == True:
+									itemCount += 1
+									square.setHasItem(False)
+									square.getItem().setGotItem(True)
 									displayGrid(grid, window, wall, background, exit, player)
-									window.blit(win, (0, 150))
-									pygame.display.flip()
-									print("You win !!!")
-									running = 1
-								else:
-									player.empty()
-									displayGrid(grid, window, wall, background, exit, player)
-									window.blit(lose, (0, 150))
-									pygame.display.flip()
-									print("You lose !!!")
-									running = 1
-							break
+									print("Got Item no." + str(itemCount))
+								pygame.display.flip()
+								if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
+									if itemCount == 3:
+										exit.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(win, (0, 150))
+										pygame.display.flip()
+										print("You win !!!")
+										capture = 0
+									else:
+										player.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(lose, (0, 150))
+										pygame.display.flip()
+										print("You lose !!!")
+										capture = 0
+								break
 
 	##Test zone
 
