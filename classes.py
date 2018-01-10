@@ -1,3 +1,10 @@
+###############
+##Import zone##
+###############
+
+import pygame
+from pygame.locals import *
+
 ###########
 ##Classes##
 ###########

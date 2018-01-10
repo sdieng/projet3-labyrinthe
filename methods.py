@@ -1,3 +1,13 @@
+###############
+##Import zone##
+###############
+
+import pygame
+from pygame.locals import *
+import random
+
+from classes import *
+
 ###################
 ##General methods##
 ###################
