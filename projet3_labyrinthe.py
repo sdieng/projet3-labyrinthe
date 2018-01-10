@@ -1,155 +1,197 @@
 # -*- coding: utf-8 -*-
-##################################################################################
-## A faire : contrôle des données,                                              ##
-##           interface graphique, capture d'événements (déplacement et fin)     ##
-##################################################################################
 
-##Zone des modules importés
+###############
+##Import zone##
+###############
 
+import pygame
+from pygame.locals import *
 import random
 
-##Zone des classes crées
+from classes import *
+from methods import *
 
-##Classe Coordinates qui est définie par deux entiers : x et y.
-##Elle permet de stocker les coordonnées d'une case ou d'un objet
-class Player:
-	def __init__(self, coord):
-		self.coord = coord
-
-	def getCoord(self):
-		x = self.coord.x
-		y = self.coord.y
-		return Coordinates(x, y)
-
-	def setCoord(self, x, y):
-		self.coord.x = x
-		self.coord.y = y
-
-class Coordinates:
-
-	def __init__(self, x, y):
-		self.x = x
-		self.y = y
-
-##Classe qui définit les cases de l'aire de jeu.
-
-
-class Square:
-
-	def __init__(self, coord, isWall): ##, hasItem, item
-		self.isWall = isWall
-		self.coord = coord
-		self.hasItem = False
-		self.item = Item('test')
-
-	##Getsetters
-
-	def getIsWall(self):
-		return self.isWall
-
-	def setIsWall(state):
-		self.isWall = state
-
-	def getHasItem(self):
-		return self.hasItem
-
-	def setHasItem(state):
-		self.hasItem = state
-
-	def getCoord(self):
-		x = self.coord.x
-		y = self.coord.y
-		return Coordinates(x, y)
-
-	def setCoord(self, x, y):
-		self.coord.x = x
-		self.coord.y = y
-
-	def setItem(self, item):
-		self.item = item
-
-	def checkMove(grid, player, coord):
-		for square in grid:
-			if square.coord == coord:
-				if square.getIsWall() == False:
-					player.setCoord(coord)
-					if square.getHasItem() == True:
-						square.item.setGotItem(True)
-
-##Classe définissant les objets du jeu par leur nom, leur emplacement, et un booléen qui indique si l'objet est en notre possession.
-
-class Item:
-	def __init__(self, name):
-		self.name = name
-		self.gotItem = False
-
-	#Getsetters
-
-	def getGotItem(self):
-		return self.gotItem
-
-	def setGotItem(state):
-		self.gotItem = state
-
-##Bloc main
+###############
+##Main method##
+###############
 
 def main():
-	macgyver = Player(Coordinates(8, 1))
-	grid = generateGrid()
-	## Zone de tests
-	print(grid[0].isWall)
-	print(grid[7].isWall)
-	##case = Square(generateRandomCoordinates(), False)
-	##print(case.coord.x)
-	##print(case.coord.y)
-	##print(case)
-	##print(case.item.name)
-	##print(case.item.coord.x)
-	##print(case.item.coord.y)
-	##case.setCoord(1, 1)
-	##case.item.setCoord(2, 2)
-	##print(case.coord.x)
-	##print(case.coord.y)
-	##print(case.item.coord.x)
-	##print(case.item.coord.y)
+	#Initialization of pygame
+	pygame.init()
 
-##Méthode générale pour générer des coordonnées aléatoires.
-##Renvoie un objet de type Coordinates
+	#Initialization window and graphic library
+	window = pygame.display.set_mode((450, 450))
+	background = pygame.image.load('graphics/background.jpg').convert()
+	wall = pygame.image.load('graphics/wall.png').convert()
+	win = pygame.image.load('graphics/win.png').convert()
+	lose = pygame.image.load('graphics/lose.png').convert()
 
-def generateRandomCoordinates():
-	coord = Coordinates(random.randint(0, 14), random.randint(0, 14))
-	return coord
+	#Initialization of the player, grid and exit
+	player = Player()
+	exit = Exit()
+	grid = generateGrid(player, exit)
 
-#Méthode de génération de la grille
+	#Item creation and insertion in grid
+	#Item no.1
+	needle = Item("Needle", 'graphics/item1.png')
+	needle.setCoord(generateRandomCoordinates())
+	grid = putItemInGrid(grid, needle, player, exit)
 
-def generateGrid():
-	with open('grid.txt') as txtgrid:
-	    strgrid = ''.join(line.strip() for line in txtgrid)
-	    chrlistGrid = list(strgrid)
-	    grid = []
-	    x = 0
-	    y = 0
-	    ##Lire la chaîne par caractères, créer un Square par caractère (for) en définissant isWall selon le caractère lu
-	    for entry in chrlistGrid:
-		    coord = Coordinates(x, y)
-		    if entry == 'W':
-			    grid.append(Square(coord, True))
-			    if x < 14:
-				    x = x + 1
-			    elif x == 14:
-				    x = 0
-				    y = y + 1
-		    elif entry == 'X':
-			    grid.append(Square(coord, False))
-			    if x < 14:
-				    x = x + 1
-			    elif x == 14:
-				    x = 0
-				    y = y + 1
+	#Item no.2
+	ether = Item("Ether", 'graphics/item2.png')
+	ether.setCoord(generateRandomCoordinates())
+	grid = putItemInGrid(grid, ether, player, exit)
 
-	##syringe = Item('seringue')
-	##tube = Item('tube')
-	##needle = Item('aiguille')
-	return grid
+	#Item no.3
+	tube = Item("Tube", 'graphics/item3.png')
+	tube.setCoord(generateRandomCoordinates())
+	grid = putItemInGrid(grid, tube, player, exit)
+
+	#Display of the grid
+	displayGrid(grid, window, wall, background, exit, player)
+
+	#################
+	##Event capture##
+	#################
+
+	running = 1
+	capture = 1
+	itemCount = 0
+	pygame.key.set_repeat(400, 30)
+
+	#2 loops : one solely for the capture of events, so movements can be disabled when game is over
+	while running:
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				capture = 0
+				running = 0
+		while capture:
+			for event in pygame.event.get():
+				if event.type == QUIT:
+					capture = 0
+					running = 0
+
+				#Movement by event capture
+				if event.type == KEYDOWN:
+					if event.key == K_DOWN:
+						for square in grid:
+							#Checks if the next square isn't a wall, and sets new coordinates por the player if the condition is true
+							if square.getCoord().getY() == (player.getCoord().getY() + 1) and square.getCoord().getX() == player.getCoord().getX() and square.getIsWall() == False:
+								player.setCoord(square.getCoord())
+								displayGrid(grid, window, wall, background, exit, player)
+								#Checks if there's an item on the square, and picks it if the condition is true
+								if square.getHasItem() == True:
+									itemCount += 1
+									square.setHasItem(False)
+									square.getItem().setGotItem(True)
+									displayGrid(grid, window, wall, background, exit, player)
+								pygame.display.flip()
+								#Checks if the square is the exit, and if it is, checks if the player has all the items
+								if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
+									#Player wins if he has all the items, loses if he misses one, then the game waits for the window to be closed
+									if itemCount == 3:
+										exit.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(lose, (0, 150))
+										pygame.display.flip()
+										capture = 0
+									else:
+										player.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(win, (0, 150))
+										pygame.display.flip()
+										capture = 0
+								break
+
+					if event.key == K_UP:
+						for square in grid:
+							#Checks if the next square isn't a wall, and sets new coordinates por the player if the condition is true
+							if square.getCoord().getY() == (player.getCoord().getY() - 1) and square.getCoord().getX() == player.getCoord().getX() and square.getIsWall() == False:
+								player.setCoord(square.getCoord())
+								displayGrid(grid, window, wall, background, exit, player)
+								#Checks if there's an item on the square, and picks it if the condition is true
+								if square.hasItem == True:
+									itemCount += 1
+									square.setHasItem(False)
+									square.getItem().setGotItem(True)
+									displayGrid(grid, window, wall, background, exit, player)
+								pygame.display.flip()
+								#Checks if the square is the exit, and if it is, checks if the player has all the items
+								if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
+									#Player wins if he has all the items, loses if he misses one, then the game waits for the window to be closed
+									if itemCount == 3:
+										exit.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(win, (0, 150))
+										pygame.display.flip()
+										capture = 0
+									else:
+										player.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(lose, (0, 150))
+										pygame.display.flip()
+										capture = 0
+								break
+
+					if event.key == K_LEFT:
+						for square in grid:
+							#Checks if the next square isn't a wall, and sets new coordinates por the player if the condition is true
+							if square.getCoord().getX() == (player.getCoord().getX() - 1) and square.getCoord().getY() == player.getCoord().getY() and square.getIsWall() == False:
+								player.setCoord(square.getCoord())
+								displayGrid(grid, window, wall, background, exit, player)
+								#Checks if there's an item on the square, and picks it if the condition is true
+								if square.getHasItem() == True:
+									itemCount += 1
+									square.setHasItem(False)
+									square.getItem().setGotItem(True)
+									displayGrid(grid, window, wall, background, exit, player)
+								pygame.display.flip()
+								#Checks if the square is the exit, and if it is, checks if the player has all the items
+								if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
+									#Player wins if he has all the items, loses if he misses one, then the game waits for the window to be closed
+									if itemCount == 3:
+										exit.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(win, (0, 150))
+										pygame.display.flip()
+										capture = 0
+									else:
+										player.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(lose, (0, 150))
+										pygame.display.flip()
+										capture = 0
+								break
+
+					if event.key == K_RIGHT:
+						for square in grid:
+							#Checks if the next square isn't a wall, and sets new coordinates por the player if the condition is true
+							if square.getCoord().getX() == (player.getCoord().getX() + 1) and square.getCoord().getY() == player.getCoord().getY() and square.getIsWall() == False:
+								player.setCoord(square.getCoord())
+								displayGrid(grid, window, wall, background, exit, player)
+								#Checks if there's an item on the square, and picks it if the condition is true
+								if square.getHasItem() == True:
+									itemCount += 1
+									square.setHasItem(False)
+									square.getItem().setGotItem(True)
+									displayGrid(grid, window, wall, background, exit, player)
+								pygame.display.flip()
+								#Checks if the square is the exit, and if it is, checks if the player has all the items
+								if player.getCoord().getX() == exit.getCoord().getX() and player.getCoord().getY() == exit.getCoord().getY():
+									#Player wins if he has all the items, loses if he misses one, then the game waits for the window to be closed
+									if itemCount == 3:
+										exit.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(win, (0, 150))
+										pygame.display.flip()
+										capture = 0
+									else:
+										player.empty()
+										displayGrid(grid, window, wall, background, exit, player)
+										window.blit(lose, (0, 150))
+										pygame.display.flip()
+										capture = 0
+								break
+
 
 main()
