@@ -21,7 +21,7 @@ def main():
 
 	#Initialization window and graphic library
 	window = pygame.display.set_mode((450, 450))
-	background = pygame.image.load('graphics/background.jpg').convert()
+	background = pygame.image.load('graphics/background.png').convert()
 	wall = pygame.image.load('graphics/wall.png').convert()
 	win = pygame.image.load('graphics/win.png').convert()
 	lose = pygame.image.load('graphics/lose.png').convert()
