@@ -1,7 +1,6 @@
 """Pygame, methods.py and classes.py importation."""
 import pygame
 from pygame.locals import *
-
 from classes import Item, Player, Exit
 from methods import generate_grid, put_item_in_grid, display_grid, generate_random_coordinates
 
