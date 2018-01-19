@@ -1,118 +1,165 @@
-###############
-##Import zone##
-###############
-
+"""Pygame importation."""
 import pygame
 from pygame.locals import *
 
-###########
-##Classes##
-###########
 
-#A class to define the attributes of the player
 class Player:
-	def __init__(self):
-		self.coord = Coordinates(None, None)
-		self.sprite = pygame.image.load('graphics/player.png').convert_alpha()
+    """
+    Description.
 
-	#Getsetters
-	def getCoord(self):
-		return self.coord
+    A class to define the attributes of the player.
+    """
 
-	def setCoord(self, coord):
-		self.coord = coord
+    def __init__(self):
+        """Constructor. Sets blank coordinates and 'player.png' as sprite."""
+        self.coord = Coordinates(None, None)
+        self.sprite = pygame.image.load('graphics/player.png').convert_alpha()
 
-	def getSprite(self):
-		return self.sprite
+    # Getsetters
+    def get_coord(self):
+        """Return the player's position as a Coordinate type object."""
+        return self.coord
 
-	#A method only for aesthetical purposes : makes the player's sprite invisible when he loses
-	def empty(self):
-		self.sprite = pygame.image.load('graphics/empty.png').convert_alpha()
+    def set_coord(self, coord):
+        """Set the player's coordniates. Uses a Coordinate type object as argument."""
+        self.coord = coord
 
-#A class for the exit. Same as Player, but wanted to create one because it will be easier for future customization
+    def get_sprite(self):
+        """Return player's sprite."""
+        return self.sprite
+
+    def empty(self):
+        """Only for aesthetical purposes : makes the player's sprite invisible when he loses."""
+        self.sprite = pygame.image.load('graphics/empty.png').convert_alpha()
+
+
 class Exit:
-	def __init__(self):
-		self.coord = Coordinates(None, None)
-		self.sprite = pygame.image.load('graphics/exit.png').convert_alpha()
+    """
+    Description.
 
-	#Getsetters
-	def getCoord(self):
-		return self.coord
+    A class for the exit.
+    Same as Player, but wanted to create one because it will be easier for future customization.
+    """
 
-	def setCoord(self, coord):
-		self.coord = coord
+    def __init__(self):
+        """Constructor. Sets blank coordinates and 'exit.png' as sprite."""
+        self.coord = Coordinates(None, None)
+        self.sprite = pygame.image.load('graphics/exit.png').convert_alpha()
 
-	def getSprite(self):
-		return self.sprite
+    # Getsetters
+    def get_coord(self):
+        """Return the exit's position as a Coordinate type object."""
+        return self.coord
 
-	#A method only for aesthetical purposes : makes the exit's sprite invisible when he wins
-	def empty(self):
-		self.sprite = pygame.image.load('graphics/empty.png').convert_alpha()
+    def set_coord(self, coord):
+        """Set the exit's coordniates. Uses a Coordinate type object as argument."""
+        self.coord = coord
 
-#Class to create an object to stock the coordinates of the various elements (player, exit, squares)
+    def get_sprite(self):
+        """Return exit's sprite."""
+        return self.sprite
+
+    def empty(self):
+        """Only for aesthetical purposes : makes the exit's sprite invisible."""
+        self.sprite = pygame.image.load('graphics/empty.png').convert_alpha()
+
+
 class Coordinates:
-	def __init__(self, x, y):
-		self.x = x
-		self.y = y
+    """
+    Description.
 
-	def setCoord(self, x, y):
-		self.x = x
-		self.y = y
+    Class to create an object to stock the coordinates of the various elements.
+    """
 
-	def getX(self):
-		return self.x
+    def __init__(self, x, y):
+        """Constructor. Takes two values to set the coordinates : x and y."""
+        self.x = x
+        self.y = y
 
-	def getY(self):
-		return self.y
+    # def setCoord(self, x, y):
+        # self.x = x
+        # self.y = y
 
-#A class that will define the squares of the maze
+    def get_x(self):
+        """Return the x value of the coordinates."""
+        return self.x
+
+    def get_y(self):
+        """Return the y value of the coordinates."""
+        return self.y
+
+
 class Square:
-	def __init__(self, coord, isWall): ##, hasItem, item
-		self.isWall = isWall
-		self.coord = coord
-		self.hasItem = False
-		self.item = Item(None, 'graphics/empty.png')
+    """
+    Description.
 
-	#Getsetters
-	def getIsWall(self):
-		return self.isWall
+    A class that will define the squares of the maze.
+    """
 
-	def getHasItem(self):
-		return self.hasItem
+    def __init__(self, coord, is_wall):
+        """Use Coordinates and isWall boolean as arguments. Starts with no item on it."""
+        self.is_wall = is_wall
+        self.coord = coord
+        self.has_item = False
+        self.item = Item(None, 'graphics/empty.png')
 
-	def setHasItem(self, state):
-		self.hasItem = state
+    # Getsetters
+    def get_is_wall(self):
+        """Return a boolean to know if the square is a wall."""
+        return self.is_wall
 
-	def getCoord(self):
-		return self.coord
+    def get_has_item(self):
+        """Return a boolean to know if there's an item on the square."""
+        return self.has_item
 
-	def setItem(self, item):
-		self.item = item
+    def set_has_item(self, state):
+        """Set the state of the has_item boolean."""
+        self.has_item = state
 
-	def getItem(self):
-		return self.item
+    def get_coord(self):
+        """Return the square's position as a Coordinate type object."""
+        return self.coord
+
+    def set_item(self, item):
+        """Change the Item attribute of the square. Uses an Item type object."""
+        self.item = item
+
+    def get_item(self):
+        """Return the item on the square."""
+        return self.item
 
 
-#A class to define the items
 class Item:
-	def __init__(self, name, sprite):
-		self.name = name
-		self.gotItem = False
-		self.coord = Coordinates(None, None)
-		self.sprite = pygame.image.load(sprite).convert_alpha()
+    """
+    Description.
 
-	#Getsetters
-	def getGotItem(self):
-		return self.gotItem
+    A class to define the items of the maze.
+    """
 
-	def setGotItem(self, state):
-		self.gotItem = state
+    def __init__(self, name, sprite):
+        """Constructor. Name and sprite (file name) as arguments."""
+        self.name = name
+        self.got_item = False
+        self.coord = Coordinates(None, None)
+        self.sprite = pygame.image.load(sprite).convert_alpha()
 
-	def getCoord(self):
-		return self.coord
+    # Getsetters
+    def get_got_item(self):
+        """Return the got_item boolean to know if the player already got the item."""
+        return self.got_item
 
-	def setCoord(self, coord):
-		self.coord = coord
+    def set_got_item(self, state):
+        """Set the got_item boolean to the state indicated by the argument."""
+        self.got_item = state
 
-	def getSprite(self):
-		return self.sprite
+    def get_coord(self):
+        """Return the item's position as a Coordinate type object."""
+        return self.coord
+
+    def set_coord(self, coord):
+        """Set the item's coordniates. Use a Coordinate type object as argument."""
+        self.coord = coord
+
+    def get_sprite(self):
+        """Return item's sprite."""
+        return self.sprite

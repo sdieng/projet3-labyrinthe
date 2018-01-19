@@ -1,110 +1,111 @@
-###############
-##Import zone##
-###############
-
+"""Pygame, random and class file imoprtation."""
+import random
 import pygame
 from pygame.locals import *
-import random
+from classes import Coordinates, Square
 
-from classes import *
 
-###################
-##General methods##
-###################
+def generate_random_coordinates():
+    """Method to get random coordinates. Returns a Coordinates type object."""
+    return Coordinates(random.randint(0, 14), random.randint(0, 14))
 
-#Method to get random coordinates. Returns a Coordinates type object
-def generateRandomCoordinates():
-	return Coordinates(random.randint(0, 14), random.randint(0, 14))
 
-#Method to generate the grid : transforms the .txt file into a list of lines, then each line into a list of characters
-def generateGrid(player, exit):
-	with open('grid.txt') as txtgrid:
-	    strgrid = ''.join(line.strip() for line in txtgrid)
-	    chrlistGrid = list(strgrid)
-	    grid = []
-	    x = 0
-	    y = 0
+def generate_grid(player, exit):
+    """
+    Method to generate the grid.
 
-	    for entry in chrlistGrid:
-			#Sets square as a wall if the character is 'W'
-		    if entry == 'W' or entry == 'w':
-			    grid.append(Square(Coordinates(x, y), True))
-			    if x < 14:
-				    x = x + 1
+    Transforms the .txt file into a list of lines, then each line into a list of characters.
+    For each character it will generate a square, or set the player/exit's position.
+    """
+    with open('grid.txt') as txt_grid:
+        str_grid = ''.join(line.strip() for line in txt_grid)
+        chr_grid = list(str_grid)
+        grid = []
+        x = 0
+        y = 0
 
-			    elif x == 14:
-				    x = 0
-				    y = y + 1
+        for entry in chr_grid:
+            # Sets square as a wall if the character is 'W'
+            if entry == 'W' or entry == 'w':
+                grid.append(Square(Coordinates(x, y), True))
+                if x < 14:
+                    x = x + 1
 
-		    elif entry == 'X' or entry == 'x':
-				#Sets square as empty if the character is 'X'
-			    grid.append(Square(Coordinates(x, y), False))
-			    if x < 14:
-				    x = x + 1
+                elif x == 14:
+                    x = 0
+                    y = y + 1
 
-			    elif x == 14:
-				    x = 0
-				    y = y + 1
+            elif entry == 'X' or entry == 'x':
+                # Sets square as empty if the character is 'X'
+                grid.append(Square(Coordinates(x, y), False))
+                if x < 14:
+                    x = x + 1
 
-		    elif entry == 'S' or entry == 's':
-				#Sets the inital position of the player if the character is a 'S'
-			    grid.append(Square(Coordinates(x, y), False))
-			    player.setCoord(Coordinates(x, y))
-			    if x < 14:
-				    x = x + 1
+                elif x == 14:
+                    x = 0
+                    y = y + 1
 
-			    elif x == 14:
-				    x = 0
-				    y = y + 1
+            elif entry == 'S' or entry == 's':
+                # Sets the inital position of the player if the character is a 'S'
+                grid.append(Square(Coordinates(x, y), False))
+                player.set_coord(Coordinates(x, y))
+                if x < 14:
+                    x = x + 1
 
-		    elif entry == 'E' or entry == 'e':
-				#Sets the position of the exit if the character is a 'E'
-			    grid.append(Square(Coordinates(x, y), False))
-			    exit.setCoord(Coordinates(x, y))
-			    if x < 14:
-				    x = x + 1
+                elif x == 14:
+                    x = 0
+                    y = y + 1
 
-			    elif x == 14:
-				    x = 0
-				    y = y + 1
+            elif entry == 'E' or entry == 'e':
+                # Sets the position of the exit if the character is a 'E'
+                grid.append(Square(Coordinates(x, y), False))
+                exit.set_coord(Coordinates(x, y))
+                if x < 14:
+                    x = x + 1
 
-	return grid
+                elif x == 14:
+                    x = 0
+                    y = y + 1
 
-#Method to display the grid
-def displayGrid(grid, window, wall, background, exit, player):
-		window.blit(background, (0, 0))
-		window.blit(player.getSprite(), (player.getCoord().getX() * 30, player.getCoord().getY() * 30))
-		window.blit(exit.getSprite(), (exit.getCoord().getX() * 30, exit.getCoord().getY() * 30))
+    return grid
 
-		for square in grid:
-			if square.isWall == True:
-				window.blit(wall, (square.getCoord().getX() * 30, square.getCoord().getY() * 30))
 
-			else:
-				if square.hasItem == True:
-					window.blit(square.getItem().getSprite(), (square.getCoord().getX() * 30, square.getCoord().getY() * 30))
-		pygame.display.flip()
+def display_grid(grid, window, wall, background, exit, player):
+    """Method to display the grid."""
+    window.blit(background, (0, 0))
+    window.blit(player.get_sprite(), (player.get_coord().get_x() * 30, player.get_coord().get_y() * 30))
+    window.blit(exit.get_sprite(), (exit.get_coord().get_x() * 30, exit.get_coord().get_y() * 30))
 
-#Method to put the items in the grid, at random positions
-def putItemInGrid(grid, item, player, exit):
-	for square in grid:
-		if square.getCoord().getX() == item.getCoord().getX() and square.getCoord().getY() == item.getCoord().getY():
-			if (item.getCoord().getX() != exit.getCoord().getX() and item.getCoord().getY() != exit.getCoord().getY()) and (item.getCoord().getX() != player.getCoord().getX() and item.getCoord().getY() != player.getCoord().getY()):
-				if square.getHasItem() == True:
-					item.setCoord(generateRandomCoordinates())
-					putItemInGrid(grid, item, player, exit)
-					break
-				if square.getIsWall() == True:
-					item.setCoord(generateRandomCoordinates())
-					putItemInGrid(grid, item, player, exit)
-					break
-				if square.getIsWall() == False and square.getHasItem() == False:
-					square.setHasItem(True)
-					square.setItem(item)
-					break
-			else:
-				item.setCoord(generateRandomCoordinates())
-				putItemInGrid(grid, item, player, exit)
-				break
+    for square in grid:
+        if square.get_is_wall() is True:
+            window.blit(wall, (square.get_coord().get_x() * 30, square.get_coord().get_y() * 30))
 
-	return grid
+        else:
+            if square.get_has_item() is True:
+                window.blit(square.get_item().get_sprite(), (square.get_coord().get_x() * 30, square.get_coord().get_y() * 30))
+    pygame.display.flip()
+
+
+def put_item_in_grid(grid, item, player, exit):
+    """Method to put the items in the grid, at random positions."""
+    for square in grid:
+        if square.get_coord().get_x() == item.get_coord().get_x() and square.get_coord().get_y() == item.get_coord().get_y():
+            if (item.get_coord().get_x() != exit.get_coord().get_x() and item.get_coord().get_y() != exit.get_coord().get_y()) and (item.get_coord().get_x() != player.get_coord().get_x() and item.get_coord().get_y() != player.get_coord().get_y()):
+                if square.get_has_item() is True:
+                    item.set_coord(generate_random_coordinates())
+                    put_item_in_grid(grid, item, player, exit)
+                    break
+                if square.get_is_wall() is True:
+                    item.set_coord(generate_random_coordinates())
+                    put_item_in_grid(grid, item, player, exit)
+                    break
+                if square.get_is_wall() is False and square.get_has_item() is False:
+                    square.set_has_item(True)
+                    square.set_item(item)
+                    break
+            else:
+                item.set_coord(generate_random_coordinates())
+                put_item_in_grid(grid, item, player, exit)
+                break
+
+    return grid
