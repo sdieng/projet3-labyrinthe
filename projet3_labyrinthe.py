@@ -69,8 +69,8 @@ while running:
                             # Checks if there's an item on the square, and picks it if the condition is true
                             if square.get_has_item() is True:
                                 item_count += 1
-                                square.setHasItem(False)
-                                square.getItem().setGotItem(True)
+                                square.set_has_item(False)
+                                square.get_item().set_got_item(True)
                                 display_grid(grid, window, wall, background, exit, player)
                             pygame.display.flip()
                             # Checks if the square is the exit, and if it is, checks if the player has all the items
